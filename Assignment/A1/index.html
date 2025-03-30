@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Event Management">
+    <meta name="keywords" content="event, management, booking, registration">
+    <meta name="author" content="Phan Hung Nguyen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="/framework/css/bootstrap.min.css">
+    <style>
+        .navbar-brand{
+            font-size: 1.8rem !important;
+        };
+    </style>
+</head>
+<body id="app">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Event Management System</a>
+        </div>
+    </nav>
+    <div class="container-fluid" style="padding: 0;">
+        <img src="images/banner.jpg" alt="Banner" class="img" style="width: 100%; height: 240px; object-fit: cover;">
+    </div>
+    <div id="why-choose-us" class="container mt-4">
+        <!-- Display Why Choose Us section-->
+         <why-choose-us :items="items"></why-choose-us>
+    </div>
+    <div id="event-informatio" class="container mt-4">
+        <!-- Display Event Filter Options -->
+        <event-filter :filters="filters"></event-filter>
+        <!-- Display Event Data in a Table -->
+        <event-table :events="events" :filters="filters"></event-table>
+    </div>
+    <div id="registration-form" class="container mt-4">
+        <!-- Display Registration Form -->
+        <registration-form :events="events"></registration-form>
+    </div>
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="container p-4">
+            <!-- Footer Content -->
+            <div class="row">
+                <div class="col-lg-9 col-md-18 mb-8 mb-md-0">
+                    <h5 class="text-uppercase">About Us</h5>
+                    <p>
+                        We provide the best event management services, ensuring your events are memorable and successful.
+                    </p>
+                </div>
+    
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Contact Us</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>Email: 105001901@student.swin.edu.au</li>
+                        <li>Phone: (+61)06880098</li>
+                        <li>Address: 76 Manningham Rd, Bulleen, VIC 3105</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Copyright -->
+        <div class="text-center p-3 bg-dark text-white">
+            © 2025 Event Management System. All rights reserved.
+        </div>
+    </footer>
+    
+    <script src="/framework/js/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    events: [], // Store parsed event data
+                    filters: {
+                        eventId: '',
+                        eventName: '',
+                        duration: '',
+                        category: 'All'
+                    },
+                    items: [
+                                {
+                                    title: 'Expert-Led Events',
+                                    description: 'Our events feature industry leaders and experts, ensuring you gain valuable insights and knowledge.'
+                                },
+                                {
+                                    title: 'Diverse Topics',
+                                    description: ' From technology to business and marketing, we cover a wide range of topics to suit your interests.'
+                                },
+                                {
+                                    title: 'Interactive Learning',
+                                    description: 'Engage in hands-on workshops, panel discussions, and networking sessions to enhance your experience.'
+                                },
+                                {
+                                    title: 'Seamless Registration',
+                                    description: 'Our user-friendly platform makes it easy to browse, filter, and register for events in just a few clicks.'
+                                },
+                                {
+                                    title: 'Affordable & Accessible',
+                                    description: 'We offer competitive pricing and flexible online or in-person attendance options to fit your needs.'
+                                },
+                                {
+                                    title: 'Global Community',
+                                    description: 'Connect with like-minded professionals, entrepreneurs, and innovators from around the world.'
+                                }
+                            ],                 
+                };
+            },
+            computed: {
+                filteredEvents() {
+                    return this.events.filter(event => {
+                        const matchesEventId = this.filters.eventId === '' || event.eventid.toString().includes(this.filters.eventId);
+                        const matchesEventName = this.filters.eventName === '' || event.eventname.toLowerCase().includes(this.filters.eventName.toLowerCase());
+                        const matchesDuration = this.filters.duration === '' || event.durationhour.toString().includes(this.filters.duration);
+                        const matchesCategory = this.filters.category === 'All' || event.category === this.filters.category;
+
+                        return matchesEventId && matchesEventName && matchesDuration && matchesCategory;
+                    });
+                }
+            },
+            methods: {
+                async loadEvents() {
+                    try {
+                        const response = await fetch('events.txt'); // Fetch the file
+                        let textData = await response.text(); // Read as text
+
+                        // Manually convert single quotes to double quotes
+                        let jsonData = textData
+                            .replace(/'/g, '"')  // Replace all single quotes with double quotes
+                            .replace(/(\w+):/g, '"$1":');  // Ensure keys are wrapped in double quotes
+
+                        this.events = JSON.parse(jsonData); // Convert to JSON and store in events
+
+                    } catch (error) {
+                        console.error("Error loading events:", error);
+                    }
+                }
+            },
+            mounted() {
+                this.loadEvents(); // Automatically load events when the component is mounted
+            },
+            components: {
+                'event-filter': {
+                    props: ['filters'],
+                    template: `
+                            <h2 class="text-center">Event Information</h2>
+                            <div class="mb-4">
+                                <h4>Filter Options</h4>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="filter-event-id" class="form-label">Event ID</label>
+                                        <input type="text" id="filter-event-id" class="form-control" v-model="filters.eventId" placeholder="Search by Event ID">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="filter-event-name" class="form-label">Event Name</label>
+                                        <input type="text" id="filter-event-name" class="form-control" v-model="filters.eventName" placeholder="Search by Event Name">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="filter-duration" class="form-label">Duration (Hours)</label>
+                                        <input type="text" id="filter-duration" class="form-control" v-model="filters.duration" placeholder="Search by Duration">
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <label class="form-label">Category</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="category-all" value="All" v-model="filters.category">
+                                            <label class="form-check-label" for="category-all">All</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="category-technology" value="Technology" v-model="filters.category">
+                                            <label class="form-check-label" for="category-technology">Technology</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="category-business" value="Business" v-model="filters.category">
+                                            <label class="form-check-label" for="category-business">Business</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="category-marketing" value="Marketing" v-model="filters.category">
+                                            <label class="form-check-label" for="category-marketing">Marketing</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="category-finance" value="Finance" v-model="filters.category">
+                                            <label class="form-check-label" for="category-finance">Finance</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                },
+                'event-table': {
+                    props: ['events','filters'],
+                    //Filter options and Events Table
+                    template: `                          
+                            <h4>Event Table</h4>
+                            <table class="table table-bordered mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Event ID</th>
+                                        <th>Event Name</th>
+                                        <th>Category</th>
+                                        <th>Duration (Hours)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="event in filteredEvents" :key="event.eventid">
+                                        <td>{{ event.eventid }}</td>
+                                        <td>{{ event.eventname }}</td>
+                                        <td>{{ event.category }}</td>
+                                        <td>{{ event.durationhour }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    `,
+                    computed: {
+                    filteredEvents() {
+                        return this.events.filter(event => {
+                                const matchesEventId = this.filters.eventId === '' || event.eventid.toString().includes(this.filters.eventId);
+                                const matchesEventName = this.filters.eventName === '' || event.eventname.toLowerCase().includes(this.filters.eventName.toLowerCase());
+                                const matchesDuration = this.filters.duration === '' || event.durationhour.toString().includes(this.filters.duration);
+                                const matchesCategory = this.filters.category === 'All' || event.category === this.filters.category;
+
+                                return matchesEventId && matchesEventName && matchesDuration && matchesCategory;
+                            });
+                        }
+                    },
+                },
+                'why-choose-us':{
+                    props: ['items'],
+                    template: `
+                        <div class="text-center" role="region" aria-labelledby="why-choose-us-heading">
+                            <h2 id="why-choose-us-heading">Why Choose Us?</h2>
+                            <div class="container mt-4">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-4 mb-4" v-for="(item, index) in items" :key="index">
+                                        <div class="card h-100 shadow-sm">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ item.title }}</h5>
+                                                <p class="card-text">{{ item.description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'registration-form':{
+                    props: ['events'],
+                    
+                    data() {
+                        return {
+                            selectedCategory: 'Business',
+                            selectedEvent: '', // Selected event name
+                            userName: '', // User's name
+                            userPassword: '', // User's password
+                            userPasswordConf: '', // User's password Confirmation
+                        };
+                    },
+                    computed: {
+                        categories() {
+                            // Extract unique categories from the events array
+                            const uniqueCategories = [...new Set(this.events.map(event => event.category))];
+                            return uniqueCategories;
+                        },
+                        filteredEventsForm() {
+                            // Filter events based on the selected category
+                            if (this.selectedCategory === '') {
+                                return [];
+                            }
+                            return this.events.filter(event => event.category === this.selectedCategory);
+                        }
+                    },
+                    methods: {
+                        submitForm() {
+                            // Handle form submission
+                            alert(`Summary Message\nUsername: ${this.userName}\nSelected Category: ${this.selectedCategory}\nSelected Event: ${this.selectedEvent}`);
+                        }
+                    },
+                    template: `
+                        <div>
+                            <h2 class="text-center">Registration Form</h2>
+                            <form id="RegisterForm" @submit.prevent="submitForm">
+                                <!-- User Name -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" v-model="userName" required>
+                                </div>
+
+                                <!-- User Password -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" v-model="userPassword" required>
+                                </div>
+
+                                <!-- User Password Confirmation -->
+                                <div class="mb-3">
+                                    <label for="passwordConfirm" class="form-label">Password Confirmation</label>
+                                    <input type="password" class="form-control" id="passwordConfirm" v-model="userPasswordConf" required>
+                                </div>
+
+                                <!-- Category Selection -->
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <div>
+                                        <div class="form-check form-check-inline" v-for="category in categories" :key="category">
+                                            <input class="form-check-input" type="radio" :id="'category-' + category" :value="category" v-model="selectedCategory">
+                                            <label class="form-check-label" :for="'category-' + category">{{ category }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Name Dropdown -->
+                                <div class="mb-3" v-if="selectedCategory">
+                                    <label for="event-name" class="form-label">Event Name</label>
+                                    <select id="event-name" class="form-select" v-model="selectedEvent" required>
+                                        <option value="" disabled>Select an Event</option>
+                                        <option v-for="event in filteredEventsForm" :key="event.id" :value="event.eventname">
+                                            {{ event.eventname }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                        </div>
+                    `,
+                }
+            }
+            }).mount("#app");
+    </script>
+    <script>
+        const form = document.getElementById('RegisterForm');
+        
+        form.addEventListener('submit', function(event){
+            const password = document.getElementById('password');
+            const passwordConfirm = document.getElementById('passwordConf');
+        });
+
+        // Check if the password confirmation is matched with password
+        if (passwordConfirm != password){
+            passwordConfirm.setCustomValidity('Your password confirmation do not match!');
+        } else {
+            passwordConfirm.setCustomValidity('');
+        }
+    </script>
+</body>
+</html>
