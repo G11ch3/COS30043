@@ -4,9 +4,4 @@
     "password": "admin",
     "email": "admin@admin.com"
   }
-  {
-    "username": "demoUser",
-    "password": "1234",
-    "email": "demo@example.com"
-  }
 ]
