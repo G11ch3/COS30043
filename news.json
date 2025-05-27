@@ -5,6 +5,7 @@
     "title": "Legends of Destiny",
     "content": "Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.",
     "category": "role-playing",
-    "author": "admin"
+    "author": "admin",
+    "exclusive": "true"
   }
 ]
