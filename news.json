@@ -119,5 +119,16 @@
     "likes": 0,
     "likedBy": [],
     "comments": []
+  },
+  {
+    "id": 12,
+    "title": "demo2",
+    "category": "demo2",
+    "date": "2025-05-29",
+    "content": "demo2",
+    "author": "admin",
+    "likes": 0,
+    "likedBy": [],
+    "comments": []
   }
 ]
