@@ -175,7 +175,13 @@
     "likedBy": [
       "admin"
     ],
-    "comments": []
+    "comments": [
+      {
+        "username": "admin",
+        "date": "29/05/2025",
+        "text": "demo"
+      }
+    ]
   },
   {
     "id": 17,
@@ -190,4 +196,15 @@
     ],
     "comments": []
   },
+  {
+    "id": 18,
+    "title": "demo13",
+    "category": "demo13",
+    "date": "2025-05-30",
+    "content": "demo13",
+    "author": "admin",
+    "likes": 0,
+    "likedBy": [],
+    "comments": []
+  }
 ]
