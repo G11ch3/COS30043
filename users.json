@@ -1,7 +1,8 @@
 [
   {
-    "username":"admin",
-    "password":"admin",
-    "email":"gameverse@admin.com"
-  }
+    "username": "admin",
+    "password": "admin",
+    "email": "gameverse@admin.com"
+  },
+  "admin"
 ]
