@@ -6,8 +6,10 @@
     "content": "Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.",
     "category": "role-playing",
     "author": "admin",
-    "likes": 0,
-    "likedBy": [],
+    "likes": 1,
+    "likedBy": [
+      "admin"
+    ],
     "comments": [],
     "exclusive": false
   },
@@ -127,7 +129,9 @@
     "content": "demo",
     "author": "admin",
     "likes": 1,
-    "likedBy": ["admin"],
+    "likedBy": [
+      "admin"
+    ],
     "comments": [],
     "exclusive": true
   },
@@ -175,7 +179,9 @@
     "content": "demo7",
     "author": "admin",
     "likes": 1,
-    "likedBy": ["admin"],
+    "likedBy": [
+      "admin"
+    ],
     "comments": [],
     "exclusive": false
   },
@@ -187,7 +193,9 @@
     "content": "demo10",
     "author": "admin",
     "likes": 1,
-    "likedBy": ["admin"],
+    "likedBy": [
+      "admin"
+    ],
     "comments": [
       {
         "username": "admin",
